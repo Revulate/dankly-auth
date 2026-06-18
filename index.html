@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dankly — Signing in…</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      font: -apple-system-body, system-ui, sans-serif;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 100vh; margin: 0; padding: 1.5rem; text-align: center; gap: 1rem;
+    }
+    a.button {
+      display: inline-block; padding: 0.75rem 1.25rem; border-radius: 0.75rem;
+      background: #9147ff; color: #fff; text-decoration: none; font-weight: 600;
+    }
+    p { opacity: 0.7; }
+  </style>
+</head>
+<body>
+  <h2>Dankly</h2>
+  <p id="msg">Signing you in…</p>
+  <a id="link" class="button" href="#" style="display:none">Open Dankly</a>
+
+  <script>
+    // Twitch's implicit-grant flow returns the access token in the URL *fragment*
+    // (after the '#'). Fragments are never sent to a server, so this page only
+    // ever sees the token client-side and immediately hands it to the app's
+    // custom URL scheme. Nothing is stored, logged, or transmitted anywhere.
+    (function () {
+      var hash = window.location.hash || "";
+      var target = "dankly://auth" + hash;
+
+      var link = document.getElementById("link");
+      var msg = document.getElementById("msg");
+      link.href = target;
+
+      // Hand off to the app.
+      window.location.replace(target);
+
+      // If the app didn't open automatically (rare), offer a manual tap.
+      setTimeout(function () {
+        msg.textContent = "Almost there — tap to return to Dankly:";
+        link.style.display = "inline-block";
+      }, 700);
+    })();
+  </script>
+</body>
+</html>
