@@ -29,21 +29,31 @@
     // ever sees the token client-side and immediately hands it to the app's
     // custom URL scheme. Nothing is stored, logged, or transmitted anywhere.
     (function () {
-      var hash = window.location.hash || "";
-      var target = "dankly://auth" + hash;
+      // Collect the OAuth params from the fragment (where Twitch puts them) and,
+      // defensively, the query string too.
+      var params = (window.location.hash || "").replace(/^#/, "");
+      var query = (window.location.search || "").replace(/^\?/, "");
+      if (query) { params = params ? (params + "&" + query) : query; }
+
+      // Forward to the app as a *query* string (dankly://auth?<params>). A query
+      // survives a custom-scheme redirect more reliably than a fragment, and the
+      // app's parseCallback reads either. ASWebAuthenticationSession captures the
+      // dankly:// callback via its callbackURLScheme.
+      var target = "dankly://auth" + (params ? "?" + params : "");
 
       var link = document.getElementById("link");
       var msg = document.getElementById("msg");
       link.href = target;
 
-      // Hand off to the app.
+      // Hand off to the app immediately.
       window.location.replace(target);
 
-      // If the app didn't open automatically (rare), offer a manual tap.
+      // iOS may block an automatic navigation to a custom scheme without a user
+      // gesture, so always surface a prominent tap-through fallback shortly after.
       setTimeout(function () {
         msg.textContent = "Almost there — tap to return to Dankly:";
         link.style.display = "inline-block";
-      }, 700);
+      }, 600);
     })();
   </script>
 </body>
