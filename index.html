@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dankly — Signing in…</title>
+  <title>Echo — Signing in…</title>
   <style>
     :root { color-scheme: light dark; }
     body {
@@ -19,9 +19,9 @@
   </style>
 </head>
 <body>
-  <h2>Dankly</h2>
+  <h2>Echo</h2>
   <p id="msg">Signing you in…</p>
-  <a id="link" class="button" href="#" style="display:none">Open Dankly</a>
+  <a id="link" class="button" href="#" style="display:none">Open Echo</a>
 
   <script>
     // Twitch's implicit-grant flow returns the access token in the URL *fragment*
@@ -35,11 +35,11 @@
       var query = (window.location.search || "").replace(/^\?/, "");
       if (query) { params = params ? (params + "&" + query) : query; }
 
-      // Forward to the app as a *query* string (dankly://auth?<params>). A query
+      // Forward to the app as a *query* string (echo://auth?<params>). A query
       // survives a custom-scheme redirect more reliably than a fragment, and the
       // app's parseCallback reads either. ASWebAuthenticationSession captures the
-      // dankly:// callback via its callbackURLScheme.
-      var target = "dankly://auth" + (params ? "?" + params : "");
+      // echo:// callback via its callbackURLScheme.
+      var target = "echo://auth" + (params ? "?" + params : "");
 
       var link = document.getElementById("link");
       var msg = document.getElementById("msg");
@@ -51,7 +51,7 @@
       // iOS may block an automatic navigation to a custom scheme without a user
       // gesture, so always surface a prominent tap-through fallback shortly after.
       setTimeout(function () {
-        msg.textContent = "Almost there — tap to return to Dankly:";
+        msg.textContent = "Almost there — tap to return to Echo:";
         link.style.display = "inline-block";
       }, 600);
     })();
